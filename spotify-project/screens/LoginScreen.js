@@ -3,9 +3,43 @@ import { StyleSheet, Text, View, SafeAreaView, Pressable } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 // import * as AppAuth from "expo-app-auth";
 
 const LoginScreen = () => {
+  const getSpotifyToken = async () => {
+    // const params = new URLSearchParams();
+    // params.append("client_id", "15fefb35fd32416c8e99502dda7d31ef");
+    // params.append("grant_type", "client_credentials");
+    // params.append("client_secret", "9134843713104c7e919f36b3111d7187");
+    // console.log(params);
+    client_id = "15fefb35fd32416c8e99502dda7d31ef";
+    client_secret = "9134843713104c7e919f36b3111d7187";
+    // const params = {
+    //   grant_type: "client_credentials",
+    // };
+    // console.log(params);
+    const params = new FormData();
+    params.append("grant_type", "client_credentials");
+    console.log(params);
+
+    // const result = await spotifyTokenApi.post<SpotifyToken>('token', params);
+    // return result.data;
+    const result = await fetch("https://accounts.spotify.com/api/token", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+        Authorization: "Basic " + client_id + ":" + client_secret,
+      },
+      body: params,
+    });
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const data = await result.json();
+    console.log(data);
+
+    return data;
+  };
   return (
     <LinearGradient colors={["#fad0c4", "#ffd1ff"]} style={{ flex: 1 }}>
       <SafeAreaView>
@@ -29,6 +63,7 @@ const LoginScreen = () => {
           </Text>
           {/* <View style={{ height: 60 }} /> */}
           <Pressable
+            onPress={getSpotifyToken}
             style={{
               marginTop: 40,
               backgroundColor: "#1DB954",
